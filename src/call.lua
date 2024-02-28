@@ -82,6 +82,7 @@ function call:load(module, key)
     return true, call.classes[module].classes[key];
 end
 
+-- create metatable for module
 function call:metatable(name_class)
     local x = { classes = {}}
 
