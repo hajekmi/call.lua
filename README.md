@@ -18,6 +18,10 @@ mymodule = call:metatable("mymodule")
 function mymodule:myfunc(a)
     return 1
 end
+
+function mymodule:undefined(a)
+    return 1
+end
 ```
 
 ## Write own sub modules
@@ -26,6 +30,10 @@ Create dir /etc/kamailio/**modules/mymodule** and create file /etc/kamailio/modu
 mysubmodule = call:metatable("mysubmodule")
 
 function mysubmodule:myfunc(a)
+    return 1
+end
+
+function mysubmodule:undefined(a)
     return 1
 end
 ```
