@@ -72,4 +72,15 @@ test("call.three:welcome", "call.three:welcome")
 test("call.three.abc:undefined", "call.three.abc:foo")
 
 
+test("call.two:savevalue=hello world", "call.two:savevalue", "hello world")
+test("call.two:getvalue=hello world", "call.two:getvalue")
+
+call:reload()
+
+test("call.two:getvalue", "call.two:getvalue")
+
+
+
+--call.two:get()
+
 print("Result OK="..count.oks.." ERRORS="..count.errors)

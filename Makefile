@@ -1,5 +1,7 @@
 SHELL := /bin/bash
 
+.DEFAULT_GOAL = help
+
 help:
 	@echo "=== Targets ==="
 	@grep '^[^#[:space:]].*:' Makefile
@@ -21,5 +23,6 @@ createversion:
 	echo "$(MY_VERSION)"
 	git tag -a $(MY_VERSION) -m "Version $(MY_VERSION)"
 	git push origin --tags
+
 
 # vim: noexpandtab filetype=make
