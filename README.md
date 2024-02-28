@@ -40,6 +40,10 @@ end
 
 ## Run tests
 ```
-cd test/
-lua test.lua
+make test
+```
+
+## Create new version
+```
+make createversion
 ```
