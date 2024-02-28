@@ -12,7 +12,7 @@ call:reload()
 call = {
     classes = {},
     path = "",
-    version = "2024.2.28",
+    version = "2024.2.28.1",
 }
 
 call = setmetatable(call, {
@@ -104,6 +104,12 @@ end
 function call:reload()
     -- unable make KSR.xlog.xinfo()
     call.classes = {}
+end
+
+-- get version
+function call:version()
+    local x = call.version
+    self:log(tostring(x))
 end
 
 return call
