@@ -12,7 +12,7 @@ call:reload()
 call = {
     classes = {},
     path = "",
-    version = "2024.2.27",
+    version = "2024.2.28",
 }
 
 call = setmetatable(call, {
