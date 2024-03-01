@@ -4,7 +4,7 @@ SHELL := /bin/bash
 
 help:
 	@echo "=== Targets ==="
-	@grep '^[^#[:space:]].*:' Makefile
+	@grep '^[^#[:space:]]*:' Makefile
 
 test: test1
 
