@@ -11,27 +11,46 @@ call:reload()
 
 call = {
     classes = {},
-    path = "",
-    version = "2024.2.28.2",
+    path = "./",
+    version = "2024.3.1",
 }
 
 call = setmetatable(call, {
    __index = function(call, key)
         if call.classes[key] == nil then
-            package.loaded[key] = nil
+            local path = call.path.."/"..key..".lua"
 
-            local bck_package_path = package.path
-            
-            package.path = package.path .. ";"..call.path.."/?.lua"
-            
-            call.classes[key] = require(key)
-            
-            package.path = bck_package_path
+            local ret, m = ""
+            ret, m = pcall(dofile, path)
+
+            if ret then
+               call:_set(key, m, nil)
+            else
+                return false
+            end
         end
 
-        return call.classes[key];
+        return call:_get(key, nil)
    end
 })
+
+function call:_set(key, p, module)
+    if module ~= nil then
+        call.classes[module][key] = 1
+        call[module][key] = p
+    else
+        call.classes[key] = {}
+        call[key] = p
+    end
+end
+
+function call:_get(key, module)
+    if module ~= nil then
+        return call[module][key]
+    else
+        return call[key]
+    end
+end
 
 function call:help()
     self:log("Autoload module for Lua/KEMI - "..call.version)
@@ -46,7 +65,7 @@ function call:log(s)
     end
 end
 
-function call:getClasses(k)
+function call:_getClasses(k)
     if k ~= nil then
         return call.classes[k]
     else
@@ -60,35 +79,31 @@ function call:path(p)
 end
 
 -- load third modules in dir
-function call:load(module, key)
-    if call.classes[module] == nil or call.classes[module].classes[key] == nil then
-        package.loaded[key] = nil
+function call:_load(module, key)
+    if call.classes[module] == nil or call.classes[module][key] == nil then
 
-        local bck_package_path = package.path
-        
-        package.path = package.path .. ";"..call.path.."/"..module.."/?.lua"
+        local path = call.path.."/"..module.."/"..key..".lua"
 
         local ret, m = ""
-        ret, m = pcall(require, key)
-        package.path = bck_package_path
+        ret, m = pcall(dofile, path)
 
         if ret then
-            call.classes[module].classes[key] = m
+            call:_set(key, m, module)
         else
             return false, nil;
         end
     end
 
-    return true, call.classes[module].classes[key];
+    return true, call:_get(key, module)
 end
 
 -- create metatable for module
-function call:metatable(name_class)
-    local x = { classes = {}}
+function call:_metatable(name_class)
+    local x = {}
 
     local y = setmetatable(x, {
        __index = function(x, key)
-            local ret, m = call:load(name_class, key)
+            local ret, m = call:_load(name_class, key)
             if ret then
                 return m
             else
@@ -103,13 +118,18 @@ end
 -- run this reload from main loop after run reload from RPC
 function call:reload()
     -- unable make KSR.xlog.xinfo()
+    for k,_ in pairs(call:_getClasses()) do
+        call[k] = nil
+        package.loaded[k] = nil
+    end
     call.classes = {}
 end
 
 -- get version
-function call:version()
+function call:_version()
     local x = call.version
     self:log(tostring(x))
+    return x
 end
 
 return call

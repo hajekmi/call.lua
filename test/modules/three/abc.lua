@@ -1,4 +1,4 @@
-abc = call:metatable("abc")
+local abc = call:_metatable("abc")
 
 function abc:welcome(a)
     local x = "call.three.abc:welcome"
@@ -11,7 +11,6 @@ function abc:welcome(a)
     end
     return x
 end
-
 
 function abc:undefined(a)
     local x = "call.three.abc:undefined"

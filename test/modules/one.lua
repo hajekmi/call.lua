@@ -1,4 +1,4 @@
-one = call:metatable("one")
+local one = call:_metatable("one")
 
 function one:welcome(a)
     local x = "call.one:welcome"

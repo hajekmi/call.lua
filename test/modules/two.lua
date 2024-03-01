@@ -1,4 +1,4 @@
-two = call:metatable("two")
+local two = call:_metatable("two")
 
 function two:welcome(a)
     local x = "call.two:welcome"

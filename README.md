@@ -13,7 +13,7 @@ end
 ## Write own modules
 Create dir /etc/kamailio/**modules** and create file /etc/kamailio/modules/**mymodule.lua**
 ```
-mymodule = call:metatable("mymodule")
+local mymodule = call:_metatable("mymodule")
 
 function mymodule:myfunc(a)
     return 1
@@ -27,7 +27,7 @@ end
 ## Write own sub modules
 Create dir /etc/kamailio/**modules/mymodule** and create file /etc/kamailio/modules/**mymodule/mysubmodule.lua**
 ```
-mysubmodule = call:metatable("mysubmodule")
+local mysubmodule = call:_metatable("mysubmodule")
 
 function mysubmodule:myfunc(a)
     return 1
@@ -46,4 +46,20 @@ make test
 ## Create new version
 ```
 make createversion
+```
+
+## Functions
+### reload
+Clean loaded modules. Usage when reload kamailio.
+
+### help
+Print author and version
+
+### path
+Set path where modules stored
+
+### \_metatable(name)
+Create and return empty module
+```
+local foo = call:_metatable("foo")
 ```
