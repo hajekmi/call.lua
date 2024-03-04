@@ -1,9 +1,9 @@
 package = "call"
-version = "2024.3.4.7-1"
+version = "2024.3.4.8-1"
 rockspec_format = "3.0"
 source = {
    url = "git+https://github.com/hajekmi/call.lua.git",
-   tag = "2024.3.4.6"
+   tag = "2024.3.4.8"
 }
 description = {
    summary = "Autoload modules",
