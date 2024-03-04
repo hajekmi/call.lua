@@ -24,5 +24,8 @@ createversion:
 	git tag -a $(MY_VERSION) -m "Version $(MY_VERSION)"
 	git push origin --tags
 
+uploadrock:
+	@# run export LUAROCK_API_KEY=.......
+	luarocks upload call-2024.3.4.2-1.rockspec --api-key=$(LUAROCK_API_KEY)
 
 # vim: noexpandtab filetype=make
