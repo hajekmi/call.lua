@@ -1,5 +1,27 @@
 # Auto load lua modules
-## Example for kamailio
+## Install
+1. luarocks
+```
+luarocks install call
+```
+2. copy file to your project
+```
+make install
+```
+
+## Example for kamailio (install from luarocks)
+```
+call = require("call")
+call:path('/etc/kamailio/modules/');
+call:reload()
+
+function ksr_request_route()
+    call.mymodule:myfunc(params)
+    call.mymodule.mysubmodule:myfunc(param)
+end
+```
+
+## Example for kamailio (install manually)
 ```
 call = dofile("/etc/kamailio/modules/call.lua")
 call:path('/etc/kamailio/modules/');
