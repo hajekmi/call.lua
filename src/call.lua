@@ -10,39 +10,12 @@ call:reload()
 -- inability to call KSR immediately after loading this module
 
 call = {
-    classes = {},
     path = "./",
-    version = "2024.3.1",
+    version = "2024.3.4",
+    _modules_path = {}, -- path to the namespace
+    _modules_name = {}, -- modules name with same namespace (this modules will be clean after reload)
+    _name = "", -- actual name module in the namespace
 }
-
-call = setmetatable(call, {
-   __index = function(call, key)
-        if call.classes[key] == nil then
-            local path = call.path.."/"..key..".lua"
-
-            local ret, m = ""
-            ret, m = pcall(dofile, path)
-
-            if ret then
-               call:_set(key, m, nil)
-            else
-                return false
-            end
-        end
-
-        return call:_get(key, nil)
-   end
-})
-
-function call:_set(key, p, module)
-    if module ~= nil then
-        call.classes[module][key] = 1
-        call[module][key] = p
-    else
-        call.classes[key] = {}
-        call[key] = p
-    end
-end
 
 function call:_get(key, module)
     if module ~= nil then
@@ -65,62 +38,109 @@ function call:log(s)
     end
 end
 
-function call:_getClasses(k)
-    if k ~= nil then
-        return call.classes[k]
-    else
-        return call.classes
-    end
-end
-
 -- set path, where lua modules find
 function call:path(p)
     call.path = p
 end
 
+function call:_preparepath(modules, key)
+    local path = call.path
+    for i,v in pairs(modules) do
+        path = path.."/"..v
+    end
+    path = path.."/"..key..".lua"
+    return path
+end
+
+function call:undefined()
+    return -1
+end
+
+-- copy table from (src) to dst table
+function call:_copytable(src,dst)
+    for k,v in pairs(src) do
+        dst[k] = v
+    end
+    return dst
+end
+
+function call:_appendtable(t, item)
+    local count = #t + 1
+    t[count] = item
+    return t
+end
+
+
 -- load third modules in dir
-function call:_load(module, key)
-    if call.classes[module] == nil or call.classes[module][key] == nil then
+function call:_load(actual_module_tbl, key)
+        local path =  call:_preparepath(actual_module_tbl["_modules_path"], key)
 
-        local path = call.path.."/"..module.."/"..key..".lua"
-
-        local ret, m = ""
-        ret, m = pcall(dofile, path)
+        local ret, new_module_tbl = ""
+        ret, new_module_tbl = pcall(dofile, path)
 
         if ret then
-            call:_set(key, m, module)
+            --[[
+            for k,v in pairs(actual_module_tbl["_modules_path"]) do
+                new_module_tbl["_modules_path"][k] = v
+            end
+            --]]
+            new_module_tbl["_modules_path"] = call:_copytable(actual_module_tbl["_modules_path"], new_module_tbl["_modules_path"])
+
+            --[[
+            local count = #new_module_tbl._modules_path + 1
+            new_module_tbl["_modules_path"][count] = key
+            --]]
+            new_module_tbl._modules_path = call:_appendtable(new_module_tbl._modules_path, key)
+
+            new_module_tbl["_name"] = key
+
+            actual_module_tbl[key] = new_module_tbl
+
+            actual_module_tbl["_modules_name"][key] = key
+
+            return true, actual_module_tbl[key]
         else
             return false, nil;
         end
-    end
-
-    return true, call:_get(key, module)
 end
 
 -- create metatable for module
-function call:_metatable(name_class)
-    local x = {}
+function call:_metatable(actual_module_tbl)
+    if actual_module_tbl == nil then
+        actual_module_tbl = {}
+    end
+    if actual_module_tbl._modules == nil then
+        actual_module_tbl["_modules_path"] = {}
+    end
+    if actual_module_tbl._modules == nil then
+        actual_module_tbl["_modules_name"] = {}
+    end
+    if actual_module_tbl._name == nil then
+        actual_module_tbl["_name"] = ""
+    end
+   
 
-    local y = setmetatable(x, {
-       __index = function(x, key)
-            local ret, m = call:_load(name_class, key)
+    actual_module_tbl = setmetatable(actual_module_tbl, {
+       __index = function(actual_module_tbl, key)
+            
+            local ret, m = call:_load(actual_module_tbl, key)
             if ret then
                 return m
             else
-                return x.undefined
+                return actual_module_tbl.undefined
             end 
        end
     })
 
-    return y
+    return actual_module_tbl
 end
 
 -- run this reload from main loop after run reload from RPC
 function call:reload()
     -- unable make KSR.xlog.xinfo()
-    for k,_ in pairs(call:_getClasses()) do
-        call[k] = nil
-        package.loaded[k] = nil
+    for k,v in pairs(call["_modules_name"]) do
+        call[v] = nil
+        package.loaded[v] = nil
     end
     call.classes = {}
 end
@@ -131,5 +151,33 @@ function call:_version()
     self:log(tostring(x))
     return x
 end
+
+-- return count array/hash
+function call:_count(a)
+    local count = 0
+    if type(a) == "table" then
+        for _ in pairs(a) do
+            count = count + 1
+        end
+    end
+    return count
+end
+
+function call:_debugtable(a)
+    print("  .......");
+    local l = call:_count(a)
+    if l == 0 then
+        print("    _empty_")
+    else
+        for k,v in pairs(a) do
+            print("    ["..k.."]: "..tostring(v))
+        end
+    end
+    print("  .......");
+end
+
+
+call = call:_metatable(call)
+
 
 return call
