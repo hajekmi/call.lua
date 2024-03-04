@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+ROCKSPECFILE := call.lua.rockspec
 
 .DEFAULT_GOAL = help
 
@@ -21,11 +22,24 @@ createversion:
 	@$(eval MY_VERSION=$(shell make getversion))
 
 	echo "$(MY_VERSION)"
+	sed -i 's~^version = "\([0-9a-z.-]*\)".*~version = "$(MY_VERSION)-1"~' ${ROCKSPECFILE}
+	sed -i 's~^\(\s*tag\) = "\([0-9a-z.-]*\)".*~\1 = "$(MY_VERSION)"~' ${ROCKSPECFILE}
+	git add ${ROCKSPECFILE}
+	git commit -m "Update rockspec file"
+	git push origin
+
 	git tag -a $(MY_VERSION) -m "Version $(MY_VERSION)"
 	git push origin --tags
 
 uploadrock:
 	@# run export LUAROCK_API_KEY=.......
-	luarocks upload call-2024.3.4.2-1.rockspec --api-key=$(LUAROCK_API_KEY)
+	@$(eval MY_VERSION=$(shell make getversion))
+	@#luarocks upload call-2024.3.4.2-1.rockspec --api-key=$(LUAROCK_API_KEY)
+	
+	rm -f call-*-1.rockspec
+	ln -s ${ROCKSPECFILE} call-${MY_VERSION}-1.rockspec
+
+	luarocks upload call-${MY_VERSION}-1.rockspec --api-key=$(LUAROCK_API_KEY)
+	rm -f call-${MY_VERSION}-1.src.rock
 
 # vim: noexpandtab filetype=make

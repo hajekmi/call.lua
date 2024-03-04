@@ -1,13 +1,13 @@
 package = "call"
-version = "2024.3.4.6-1"
+version = "2024.3.4.7-1"
 rockspec_format = "3.0"
 source = {
    url = "git+https://github.com/hajekmi/call.lua.git",
    tag = "2024.3.4.6"
 }
 description = {
-   summary = "Autload modules",
-   detailed = "Autoload modules",
+   summary = "Autoload modules",
+   detailed = "Autoload modules via files and dirs",
    homepage = "https://github.com/hajekmi/call.lua",
    license = "MIT",
    maintainer = "Michal Hajek <michal@hajek.net>",
