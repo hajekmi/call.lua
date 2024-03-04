@@ -11,7 +11,7 @@ call:reload()
 
 call = {
     path = "./",
-    version = "2024.3.4.3",
+    version = "2024.3.4.4",
     _modules_path = {}, -- path to the namespace
     _modules_name = {}, -- modules name with same namespace (this modules will be clean after reload)
     _name = "", -- actual name module in the namespace
