@@ -54,13 +54,6 @@ function stopwatch(a)
 end
 
 
---[[
-call.three:welcome("aaa")
-call.three.three10.xyz:pokus()
-call.two:welcome("aaa")
-
-os.exit();
---]]
 -- version
 test(tostring(call.version), "call:_version")
 
@@ -115,80 +108,103 @@ test("call.b.bc:welcome=hello world 12", "call.b.bc:welcome", "hello world 12")
 test("call.b.bc:undefined=hello world 12", "call.b.bc:foo", "hello world 12")
 
 -- dir: ./b/ba/
-test("call.b.ba.baa:welcome=hello world 7", "call.b.ba.baa:welcome", "hello world 7")
-test("call.b.ba.baa:undefined=hello world 7", "call.b.ba.baa:foo", "hello world 7")
+test("call.b.ba.baa:welcome=hello world 13", "call.b.ba.baa:welcome", "hello world 13")
+test("call.b.ba.baa:undefined=hello world 13", "call.b.ba.baa:foo", "hello world 13")
 
-test("call.b.ba.bab:welcome=hello world 8", "call.b.ba.bab:welcome", "hello world 8")
-test("call.b.ba.bab:undefined=hello world 8", "call.b.ba.bab:foo", "hello world 8")
+test("call.b.ba.bab:welcome=hello world 14", "call.b.ba.bab:welcome", "hello world 14")
+test("call.b.ba.bab:undefined=hello world 14", "call.b.ba.bab:foo", "hello world 14")
 
-test("call.b.ba.bac:welcome=hello world 9", "call.b.ba.bac:welcome", "hello world 9")
-test("call.b.ba.bac:undefined=hello world 9", "call.b.ba.bac:foo", "hello world 9")
+test("call.b.ba.bac:welcome=hello world 15", "call.b.ba.bac:welcome", "hello world 15")
+test("call.b.ba.bac:undefined=hello world 15", "call.b.ba.bac:foo", "hello world 15")
 
-
---[[
--- init
-test("call.one:welcome=hello world", "call.one:welcome", "hello world")
-test("call.one:undefined=hello world", "call.one:foo", "hello world")
-
-
-test("call.two:welcome=hello world", "call.two:welcome", "hello world")
-test("call.two:undefined=hello world", "call.two:foo", "hello world")
-
-
-test("call.three:welcome=hello world", "call.three:welcome", "hello world")
-test("call.three:undefined=hello world", "call.three:foo", "hello world")
-
-
-
-test("call.three.abc:welcome=hello world", "call.three.abc:welcome", "hello world")
-test("call.three.abc:undefined=hello world", "call.three.abc:foo", "hello world")
-
-test("call.three:welcome", "call.three:welcome")
-test("call.three.abc:undefined", "call.three.abc:foo")
-
+-- save value
+test("call.a.aa:savevalue=hello world", "call.a.aa:savevalue", "hello world")
+test("call.a.aa:getvalue=hello world", "call.a.aa:getvalue")
 
 -- reload
 call:reload()
 
--- test again
-test("call.one:welcome=hello world", "call.one:welcome", "hello world")
-test("call.one:undefined=hello world", "call.one:foo", "hello world")
+-- test clean after reload
+test("call.a.aa:getvalue", "call.a.aa:getvalue")
 
-test("call.two:welcome=hello world", "call.two:welcome", "hello world")
-test("call.two:undefined=hello world", "call.two:foo", "hello world")
+-- again test
+-- dir: ./
+test("call.a:welcome=hello world 1", "call.a:welcome", "hello world 1")
+test("call.a:undefined=hello world 1", "call.a:foo", "hello world 1")
 
-test("call.three:welcome=hello world", "call.three:welcome", "hello world")
-test("call.three:undefined=hello world", "call.three:foo", "hello world")
+test("call.b:welcome=hello world 2", "call.b:welcome", "hello world 2")
+test("call.b:undefined=hello world 2", "call.b:foo", "hello world 2")
 
-test("call.three.abc:welcome=hello world", "call.three.abc:welcome", "hello world")
-test("call.three.abc:undefined=hello world", "call.three.abc:foo", "hello world")
+test("call.c:welcome=hello world 3", "call.c:welcome", "hello world 3")
+test("call.c:undefined=hello world 3", "call.c:foo", "hello world 3")
 
-test("call.three:welcome", "call.three:welcome")
-test("call.three.abc:undefined", "call.three.abc:foo")
+-- dir: ./a/
+test("call.a.aa:welcome=hello world 4", "call.a.aa:welcome", "hello world 4")
+test("call.a.aa:undefined=hello world 4", "call.a.aa:foo", "hello world 4")
 
+test("call.a.ab:welcome=hello world 5", "call.a.ab:welcome", "hello world 5")
+test("call.a.ab:undefined=hello world 5", "call.a.ab:foo", "hello world 5")
+
+test("call.a.ac:welcome=hello world 6", "call.a.ac:welcome", "hello world 6")
+test("call.a.ac:undefined=hello world 6", "call.a.ac:foo", "hello world 6")
+
+-- dir: ./a/aa/
+test("call.a.aa.aaa:welcome=hello world 7", "call.a.aa.aaa:welcome", "hello world 7")
+test("call.a.aa.aaa:undefined=hello world 7", "call.a.aa.aaa:foo", "hello world 7")
+
+test("call.a.aa.aab:welcome=hello world 8", "call.a.aa.aab:welcome", "hello world 8")
+test("call.a.aa.aab:undefined=hello world 8", "call.a.aa.aab:foo", "hello world 8")
+
+test("call.a.aa.aac:welcome=hello world 9", "call.a.aa.aac:welcome", "hello world 9")
+test("call.a.aa.aac:undefined=hello world 9", "call.a.aa.aac:foo", "hello world 9")
+
+-- dir: ./a/ab/
+test("call.a.ab.aba:welcome=hello world 7", "call.a.ab.aba:welcome", "hello world 7")
+test("call.a.ab.aba:undefined=hello world 7", "call.a.ab.aba:foo", "hello world 7")
+
+test("call.a.ab.abb:welcome=hello world 8", "call.a.ab.abb:welcome", "hello world 8")
+test("call.a.ab.abb:undefined=hello world 8", "call.a.ab.abb:foo", "hello world 8")
+
+test("call.a.ab.abc:welcome=hello world 9", "call.a.ab.abc:welcome", "hello world 9")
+test("call.a.ab.abc:undefined=hello world 9", "call.a.ab.abc:foo", "hello world 9")
+
+-- dir: ./b/
+test("call.b.ba:welcome=hello world 10", "call.b.ba:welcome", "hello world 10")
+test("call.b.ba:undefined=hello world 10", "call.b.ba:foo", "hello world 10")
+
+test("call.b.bb:welcome=hello world 11", "call.b.bb:welcome", "hello world 11")
+test("call.b.bb:undefined=hello world 11", "call.b.bb:foo", "hello world 11")
+
+test("call.b.bc:welcome=hello world 12", "call.b.bc:welcome", "hello world 12")
+test("call.b.bc:undefined=hello world 12", "call.b.bc:foo", "hello world 12")
+
+-- dir: ./b/ba/
+test("call.b.ba.baa:welcome=hello world 13", "call.b.ba.baa:welcome", "hello world 13")
+test("call.b.ba.baa:undefined=hello world 13", "call.b.ba.baa:foo", "hello world 13")
+
+test("call.b.ba.bab:welcome=hello world 14", "call.b.ba.bab:welcome", "hello world 14")
+test("call.b.ba.bab:undefined=hello world 14", "call.b.ba.bab:foo", "hello world 14")
+
+test("call.b.ba.bac:welcome=hello world 15", "call.b.ba.bac:welcome", "hello world 15")
+test("call.b.ba.bac:undefined=hello world 15", "call.b.ba.bac:foo", "hello world 15")
 
 -- save value
-test("call.two:savevalue=hello world", "call.two:savevalue", "hello world")
-test("call.two:getvalue=hello world", "call.two:getvalue")
+test("call.a.aa:savevalue=hello world", "call.a.aa:savevalue", "hello world")
+test("call.a.aa:getvalue=hello world", "call.a.aa:getvalue")
 
 
--- clean
-call:reload()
-
--- test clean after reload
-test("call.two:getvalue", "call.two:getvalue")
 
 
 -- performance test
 p = {}
 stopwatch(1)
 for i = 1,1000000,1 do
-    call.two:welcome();
+    call.a:welcome();
 end
 p.finish1 = stopwatch(2)
 --print(string.format("elapsed time: %.4f", p.finish1))
 
-foo_test = dofile(call.path.."/two.lua")
+foo_test = dofile(call.path.."/a.lua")
 stopwatch(1)
 for i = 1,1000000,1 do
     foo_test:welcome()
@@ -198,18 +214,18 @@ foo_test = nil
 --print(string.format("elapsed time: %.4f", p.finish2))
 
 p.pct = ( p.finish1 - p.finish2 ) / ( p.finish2/100 )
-print("Slowed down by "..p.pct.." % [call.two:welcome()]")
+print("Slowed down by "..p.pct.." % [call.a:welcome()]")
 
 -- performance test2
 p = {}
 stopwatch(1)
 for i = 1,1000000,1 do
-    call.three.abc:welcome();
+    call.a.aa.aab:welcome();
 end
 p.finish1 = stopwatch(2)
 --print(string.format("elapsed time: %.4f", p.finish1))
 
-foo_test = dofile(call.path.."/three/abc.lua")
+foo_test = dofile(call.path.."/a/aa/aab.lua")
 stopwatch(1)
 for i = 1,1000000,1 do
     foo_test:welcome()
@@ -219,12 +235,10 @@ foo_test = nil
 --print(string.format("elapsed time: %.4f", p.finish2))
 
 p.pct = ( p.finish1 - p.finish2 ) / ( p.finish2/100 )
-print("Slowed down by "..p.pct.." % [call.three.abc:welcome()]")
+print("Slowed down by "..p.pct.." % [call.a.aa.aab:welcome()]")
 
 print()
 print("Result OK="..count.oks.." ERRORS="..count.errors)
 
 
-call.three.three10.xyz:ahoj()
-call:_debugtable(call._modules_name)
---]]
+

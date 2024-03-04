@@ -11,22 +11,14 @@ call:reload()
 
 call = {
     path = "./",
-    version = "2024.3.4",
+    version = "2024.3.4.1",
     _modules_path = {}, -- path to the namespace
     _modules_name = {}, -- modules name with same namespace (this modules will be clean after reload)
     _name = "", -- actual name module in the namespace
 }
 
-function call:_get(key, module)
-    if module ~= nil then
-        return call[module][key]
-    else
-        return call[key]
-    end
-end
-
 function call:help()
-    self:log("Autoload module for Lua/KEMI - "..call.version)
+    self:log("Autoload module for Lua/KEMI - "..call._version())
     self:log("Powered by Michal Hajek <michal.hajek@daktela.com>")
 end
 
@@ -40,9 +32,15 @@ end
 
 -- set path, where lua modules find
 function call:path(p)
-    call.path = p
+    if p == nil then
+        return true, call.path
+    else
+        call.path = p
+        return true
+    end
 end
 
+-- return path to the module namespace
 function call:_preparepath(modules, key)
     local path = call.path
     for i,v in pairs(modules) do
@@ -53,7 +51,7 @@ function call:_preparepath(modules, key)
 end
 
 function call:undefined()
-    return -1
+    return false
 end
 
 -- copy table from (src) to dst table
@@ -64,12 +62,12 @@ function call:_copytable(src,dst)
     return dst
 end
 
-function call:_appendtable(t, item)
+-- appent item to indexed array
+function call:_appendindextable(t, item)
     local count = #t + 1
     t[count] = item
     return t
 end
-
 
 -- load third modules in dir
 function call:_load(actual_module_tbl, key)
@@ -79,18 +77,9 @@ function call:_load(actual_module_tbl, key)
         ret, new_module_tbl = pcall(dofile, path)
 
         if ret then
-            --[[
-            for k,v in pairs(actual_module_tbl["_modules_path"]) do
-                new_module_tbl["_modules_path"][k] = v
-            end
-            --]]
             new_module_tbl["_modules_path"] = call:_copytable(actual_module_tbl["_modules_path"], new_module_tbl["_modules_path"])
 
-            --[[
-            local count = #new_module_tbl._modules_path + 1
-            new_module_tbl["_modules_path"][count] = key
-            --]]
-            new_module_tbl._modules_path = call:_appendtable(new_module_tbl._modules_path, key)
+            new_module_tbl._modules_path = call:_appendindextable(new_module_tbl._modules_path, key)
 
             new_module_tbl["_name"] = key
 
@@ -118,7 +107,6 @@ function call:_metatable(actual_module_tbl)
     if actual_module_tbl._name == nil then
         actual_module_tbl["_name"] = ""
     end
-   
 
     actual_module_tbl = setmetatable(actual_module_tbl, {
        __index = function(actual_module_tbl, key)
@@ -142,7 +130,8 @@ function call:reload()
         call[v] = nil
         package.loaded[v] = nil
     end
-    call.classes = {}
+    call["_modules_name"] = {}
+    call["_modules_path"] = {}
 end
 
 -- get version
@@ -163,6 +152,7 @@ function call:_count(a)
     return count
 end
 
+-- print debug table (array or hash)
 function call:_debugtable(a)
     print("  .......");
     local l = call:_count(a)
@@ -176,8 +166,6 @@ function call:_debugtable(a)
     print("  .......");
 end
 
-
 call = call:_metatable(call)
-
 
 return call
