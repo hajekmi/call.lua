@@ -7,6 +7,7 @@ call:reload()
 
 function ksr_request_route()
     call.mymodule:myfunc(params)
+    call.mymodule.mysubmodule:myfunc(param)
 end
 ```
 
@@ -37,6 +38,7 @@ function mysubmodule:undefined(a)
     return 1
 end
 ```
+Or you can see to test dir
 
 ## Run tests
 ```
