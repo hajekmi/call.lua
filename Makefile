@@ -42,4 +42,9 @@ uploadrock:
 	luarocks upload call-${MY_VERSION}-1.rockspec --api-key=$(LUAROCK_API_KEY)
 	rm -f call-${MY_VERSION}-1.src.rock
 
+clean:
+	@$(eval MY_VERSION=$(shell make getversion))
+	rm -f call-${MY_VERSION}-1.src.rock
+	rm -f call-*-1.rockspec
+
 # vim: noexpandtab filetype=make
