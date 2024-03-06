@@ -35,7 +35,8 @@ uploadrock:
 	@# run export LUAROCK_API_KEY=.......
 	@$(eval MY_VERSION=$(shell make getversion))
 	@#luarocks upload call-2024.3.4.2-1.rockspec --api-key=$(LUAROCK_API_KEY)
-	
+	@echo "LUAROCK_API_KEY=$(LUAROCK_API_KEY)"
+
 	rm -f call-*-1.rockspec
 	ln -s ${ROCKSPECFILE} call-${MY_VERSION}-1.rockspec
 
