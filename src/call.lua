@@ -35,10 +35,10 @@ end
 -- set path, where lua modules find
 function call:path(p)
     if p == nil then
-        return self._c.path, true
+        return self._c.path
     else
         self._c.path = p
-        return self._c.path, true
+        return self._c.path
     end
 end
 
