@@ -16,7 +16,7 @@ install:
 	@echo "Copy file src/call.lua to your own project"
 
 getversion:
-	@grep '\s*version\s*=\s*"' src/call.lua | sed 's~.*"\([^"]*\)".*~\1~'
+	@grep -P '^\s*version\s*=\s*"' src/call.lua | sed 's~.*"\([^"]*\)".*~\1~'
 
 createversion:
 	@$(eval MY_VERSION=$(shell make getversion))

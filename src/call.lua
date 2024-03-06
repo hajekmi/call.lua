@@ -10,15 +10,17 @@ call:reload()
 -- inability to call KSR immediately after loading this module
 
 call = {
-    path = "./",
-    version = "2024.3.4.8",
-    _modules_path = {}, -- path to the namespace
-    _modules_name = {}, -- modules name with same namespace (this modules will be clean after reload)
-    _name = "", -- actual name module in the namespace
+    _c = {
+        path = "./",
+        version = "2024.3.6.1",
+        modules_path = {}, -- path to the namespace
+        modules_name = {}, -- modules name with same namespace (this modules will be clean after reload)
+        name = "", -- actual name module in the namespace
+    },
 }
 
-function call:help()
-    self:log("Autoload module for Lua/KEMI - "..call._version())
+function call:_help()
+    self:log("Autoload module for Lua/KEMI - "..call._getversion())
     self:log("Powered by Michal Hajek <michal.hajek@daktela.com>")
 end
 
@@ -33,16 +35,16 @@ end
 -- set path, where lua modules find
 function call:path(p)
     if p == nil then
-        return true, call.path
+        return call._c.path, true
     else
-        call.path = p
-        return true
+        call._c.path = p
+        return call._c.path, true
     end
 end
 
 -- return path to the module namespace
 function call:_preparepath(modules, key)
-    local path = call.path
+    local path = call._c.path
     for i,v in pairs(modules) do
         path = path.."/"..v
     end
@@ -71,21 +73,21 @@ end
 
 -- load third modules in dir
 function call:_load(actual_module_tbl, key)
-        local path =  call:_preparepath(actual_module_tbl["_modules_path"], key)
+        local path =  call:_preparepath(actual_module_tbl._c.modules_path, key)
 
         local ret, new_module_tbl = ""
         ret, new_module_tbl = pcall(dofile, path)
 
         if ret then
-            new_module_tbl["_modules_path"] = call:_copytable(actual_module_tbl["_modules_path"], new_module_tbl["_modules_path"])
+            new_module_tbl._c["modules_path"] = call:_copytable(actual_module_tbl._c["modules_path"], new_module_tbl._c["modules_path"])
 
-            new_module_tbl._modules_path = call:_appendindextable(new_module_tbl._modules_path, key)
+            new_module_tbl._c.modules_path = call:_appendindextable(new_module_tbl._c.modules_path, key)
 
-            new_module_tbl["_name"] = key
+            new_module_tbl._c["name"] = key
 
             actual_module_tbl[key] = new_module_tbl
 
-            actual_module_tbl["_modules_name"][key] = key
+            actual_module_tbl._c["modules_name"][key] = key
 
             return true, actual_module_tbl[key]
         else
@@ -98,14 +100,17 @@ function call:_metatable(actual_module_tbl)
     if actual_module_tbl == nil then
         actual_module_tbl = {}
     end
-    if actual_module_tbl._modules == nil then
-        actual_module_tbl["_modules_path"] = {}
+    if actual_module_tbl._c == nil then
+        actual_module_tbl["_c"] = {}
     end
-    if actual_module_tbl._modules == nil then
-        actual_module_tbl["_modules_name"] = {}
+    if actual_module_tbl._c.modules_path == nil then
+        actual_module_tbl._c["modules_path"] = {}
     end
-    if actual_module_tbl._name == nil then
-        actual_module_tbl["_name"] = ""
+    if actual_module_tbl._c.modules_name == nil then
+        actual_module_tbl._c["modules_name"] = {}
+    end
+    if actual_module_tbl._c.name == nil then
+        actual_module_tbl._c["name"] = ""
     end
 
     actual_module_tbl = setmetatable(actual_module_tbl, {
@@ -126,17 +131,17 @@ end
 -- run this reload from main loop after run reload from RPC
 function call:reload()
     -- unable make KSR.xlog.xinfo()
-    for k,v in pairs(call["_modules_name"]) do
+    for k,v in pairs(call._c["modules_name"]) do
         call[v] = nil
         package.loaded[v] = nil
     end
-    call["_modules_name"] = {}
-    call["_modules_path"] = {}
+    call._c["modules_name"] = {}
+    call._c["modules_path"] = {}
 end
 
 -- get version
 function call:_version()
-    local x = call.version
+    local x = call._c.version
     self:log(tostring(x))
     return x
 end

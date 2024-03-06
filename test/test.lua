@@ -55,7 +55,7 @@ end
 
 
 -- version
-test(tostring(call.version), "call:_version")
+test(tostring(call._c.version), "call:_version")
 
 -- dir: ./
 test("call.a:welcome=hello world 1", "call.a:welcome", "hello world 1")
@@ -204,8 +204,8 @@ end
 p.finish1 = stopwatch(2)
 --print(string.format("elapsed time: %.4f", p.finish1))
 
-foo_test = dofile(call.path.."/a.lua")
 stopwatch(1)
+foo_test = dofile(call:path().."/a.lua")
 for i = 1,1000000,1 do
     foo_test:welcome()
 end
@@ -225,8 +225,8 @@ end
 p.finish1 = stopwatch(2)
 --print(string.format("elapsed time: %.4f", p.finish1))
 
-foo_test = dofile(call.path.."/a/aa/aab.lua")
 stopwatch(1)
+foo_test = dofile(call:path().."/a/aa/aab.lua")
 for i = 1,1000000,1 do
     foo_test:welcome()
 end
@@ -239,6 +239,3 @@ print("Slowed down by "..p.pct.." % [call.a.aa.aab:welcome()]")
 
 print()
 print("Result OK="..count.oks.." ERRORS="..count.errors)
-
-
-
