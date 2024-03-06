@@ -73,17 +73,15 @@ make createversion
 ```
 
 ## Functions
-### reload()
-Clean loaded modules. Usage when reload kamailio.
-
-### \_help()
-Print author and version
-
 ### path("./dir...")
 Set path where modules stored
 
 ### path()
 Get path where modules stored
+
+### reload()
+Clean loaded modules. And runs one complete cycle of garbage collection. 
+Usage when reload kamailio.
 
 ### \_metatable()
 Create and return empty module
@@ -96,5 +94,11 @@ local baa = {}
 baa = call:_metatable(baa)
 ```
 
+### \_help()
+Print author and version
+
 ### \_version()
 Get version
+
+### \_getmem(p)
+Get or print memory usage in kBytes. When p ~= nil then print to stdout
