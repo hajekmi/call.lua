@@ -47,7 +47,7 @@ function mymodule:undefined(a)
 end
 ```
 
-## Write own sub modules
+## Write own sub modules (with unlimited looping in the directories)
 Create dir /etc/kamailio/**modules/mymodule** and create file /etc/kamailio/modules/**mymodule/mysubmodule.lua**
 ```
 local mysubmodule = call:_metatable()
@@ -60,7 +60,7 @@ function mysubmodule:undefined(a)
     return 1
 end
 ```
-Or you can see to test dir
+Or you can see to test dir - with unlimited looping in the directories
 
 ## Run tests
 ```
