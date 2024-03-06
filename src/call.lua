@@ -12,7 +12,7 @@ call:reload()
 call = {
     _c = {
         path = "./",
-        version = "2024.3.6.2",
+        version = "2024.3.6.3",
         modules_path = {}, -- path to the namespace
         modules_name = {}, -- modules name with same namespace (this modules will be clean after reload)
         name = "", -- actual name module in the namespace
@@ -137,6 +137,16 @@ function call:reload()
     end
     call._c["modules_name"] = {}
     call._c["modules_path"] = {}
+    collectgarbage("collect") -- free mem
+end
+
+-- return usage mem in kBytes
+function call:_getmem(print_output)
+    local x = collectgarbage("count")
+    if print_output ~= nil then
+        print("Mem usage is "..x.." kBytes")
+    end
+    return x
 end
 
 -- get version

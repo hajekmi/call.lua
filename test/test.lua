@@ -14,6 +14,8 @@ time = {
     0  -- 2.
 }
 
+-- mem
+call:_getmem(1)
 
 function test(ret_correct, cmd, ...)
     local arg = { ... }
@@ -121,8 +123,14 @@ test("call.b.ba.bac:undefined=hello world 15", "call.b.ba.bac:foo", "hello world
 test("call.a.aa:savevalue=hello world", "call.a.aa:savevalue", "hello world")
 test("call.a.aa:getvalue=hello world", "call.a.aa:getvalue")
 
+-- mem
+call:_getmem(1)
+
 -- reload
 call:reload()
+
+-- mem
+call:_getmem(1)
 
 -- test clean after reload
 test("call.a.aa:getvalue", "call.a.aa:getvalue")
@@ -238,4 +246,8 @@ p.pct = ( p.finish1 - p.finish2 ) / ( p.finish2/100 )
 print("Slowed down by "..p.pct.." % [call.a.aa.aab:welcome()]")
 
 print()
+-- mem
+call:_getmem(1)
+print()
+
 print("Result OK="..count.oks.." ERRORS="..count.errors)
