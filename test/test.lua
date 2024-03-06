@@ -209,7 +209,7 @@ test("call.a.aa:getvalue=hello world", "call.a.aa:getvalue")
 -- performance test
 p = {}
 stopwatch(1)
-for i = 1,1000000,1 do
+for i = 1,2000000,1 do
     call.a:welcome();
 end
 p.finish1 = stopwatch(2)
@@ -217,7 +217,7 @@ p.finish1 = stopwatch(2)
 
 stopwatch(1)
 foo_test = dofile(call:path().."/a.lua")
-for i = 1,1000000,1 do
+for i = 1,2000000,1 do
     foo_test:welcome()
 end
 p.finish2 = stopwatch(2)
@@ -230,7 +230,7 @@ print("Slowed down by "..p.pct.." % [call.a:welcome()]")
 -- performance test2
 p = {}
 stopwatch(1)
-for i = 1,1000000,1 do
+for i = 1,2000000,1 do
     call.a.aa.aab:welcome();
 end
 p.finish1 = stopwatch(2)
@@ -238,7 +238,7 @@ p.finish1 = stopwatch(2)
 
 stopwatch(1)
 foo_test = dofile(call:path().."/a/aa/aab.lua")
-for i = 1,1000000,1 do
+for i = 1,2000000,1 do
     foo_test:welcome()
 end
 p.finish2 = stopwatch(2)
@@ -249,6 +249,7 @@ p.pct = ( p.finish1 - p.finish2 ) / ( p.finish2/100 )
 print("Slowed down by "..p.pct.." % [call.a.aa.aab:welcome()]")
 
 print()
+
 -- mem
 call:_getmem(1)
 print()
