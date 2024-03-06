@@ -76,11 +76,14 @@ make createversion
 ### reload()
 Clean loaded modules. Usage when reload kamailio.
 
-### help()
+### \_help()
 Print author and version
 
-### path()
+### path("./dir...")
 Set path where modules stored
+
+### path()
+Get path where modules stored
 
 ### \_metatable()
 Create and return empty module
