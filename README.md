@@ -1,9 +1,9 @@
 # Auto load lua modules
 Automatic loading of files as looped modules.
-For example, calling call.module1.submodule2.submodule3:anyfunc() will load the following files automatically:
-module1.lua -> create table call.module1
-module1/submodule2.lua -> create table call.module1.submodule2
-module1/submodule2/submodule3.lua - create table call.module1.submodule2.submodule3 and return result from anyfunc()
+For example, calling **call.module1.submodule2.submodule3:anyfunc()** will load the following files automatically:
+- module1.lua -> create table call.**module1**
+- module1/submodule2.lua -> create table call.**module1.submodule2**
+- module1/submodule2/submodule3.lua - create table call.**module1.submodule2.submodule3** and return result from **anyfunc()**
 
 ## Install
 1. luarocks
