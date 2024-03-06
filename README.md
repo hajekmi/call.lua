@@ -97,8 +97,8 @@ baa = call:_metatable(baa)
 ### \_help()
 Print author and version
 
-### \_version()
-Get version
+### \_version(p)
+Get version. When p ~= nil then print to stdout
 
 ### \_getmem(p)
 Get or print memory usage in kBytes. When p ~= nil then print to stdout

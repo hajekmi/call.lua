@@ -20,12 +20,12 @@ call = {
 }
 
 function call:_help()
-    self:log("Autoload module for Lua/KEMI - "..call._getversion())
-    self:log("Powered by Michal Hajek <michal.hajek@daktela.com>")
+    self:_log("Autoload module for Lua/KEMI - "..self:_version())
+    self:_log("Powered by Michal Hajek <michal.hajek@daktela.com>")
 end
 
 -- unable run KSR after kamailio load.
-function call:log(s)
+function call:_log(s)
     print(s)
     if KSR ~= nil then
         KSR.xlog.xinfo(s.."\n")
@@ -35,16 +35,16 @@ end
 -- set path, where lua modules find
 function call:path(p)
     if p == nil then
-        return call._c.path, true
+        return self._c.path, true
     else
-        call._c.path = p
-        return call._c.path, true
+        self._c.path = p
+        return self._c.path, true
     end
 end
 
 -- return path to the module namespace
 function call:_preparepath(modules, key)
-    local path = call._c.path
+    local path = self._c.path
     for i,v in pairs(modules) do
         path = path.."/"..v
     end
@@ -73,15 +73,15 @@ end
 
 -- load third modules in dir
 function call:_load(actual_module_tbl, key)
-        local path =  call:_preparepath(actual_module_tbl._c.modules_path, key)
+        local path =  self:_preparepath(actual_module_tbl._c.modules_path, key)
 
         local ret, new_module_tbl = ""
         ret, new_module_tbl = pcall(dofile, path)
 
         if ret then
-            new_module_tbl._c["modules_path"] = call:_copytable(actual_module_tbl._c["modules_path"], new_module_tbl._c["modules_path"])
+            new_module_tbl._c["modules_path"] = self:_copytable(actual_module_tbl._c["modules_path"], new_module_tbl._c["modules_path"])
 
-            new_module_tbl._c.modules_path = call:_appendindextable(new_module_tbl._c.modules_path, key)
+            new_module_tbl._c.modules_path = self:_appendindextable(new_module_tbl._c.modules_path, key)
 
             new_module_tbl._c["name"] = key
 
@@ -116,7 +116,7 @@ function call:_metatable(actual_module_tbl)
     actual_module_tbl = setmetatable(actual_module_tbl, {
        __index = function(actual_module_tbl, key)
             
-            local ret, m = call:_load(actual_module_tbl, key)
+            local ret, m = self:_load(actual_module_tbl, key)
             if ret then
                 return m
             else
@@ -131,12 +131,12 @@ end
 -- run this reload from main loop after run reload from RPC
 function call:reload()
     -- unable make KSR.xlog.xinfo()
-    for k,v in pairs(call._c["modules_name"]) do
+    for k,v in pairs(self._c["modules_name"]) do
         call[v] = nil
         package.loaded[v] = nil
     end
-    call._c["modules_name"] = {}
-    call._c["modules_path"] = {}
+    self._c["modules_name"] = {}
+    self._c["modules_path"] = {}
     collectgarbage("collect") -- free mem
 end
 
@@ -144,15 +144,17 @@ end
 function call:_getmem(print_output)
     local x = collectgarbage("count")
     if print_output ~= nil then
-        print("Mem usage is "..x.." kBytes")
+        self:_log("Mem usage is "..x.." kBytes")
     end
     return x
 end
 
 -- get version
-function call:_version()
-    local x = call._c.version
-    self:log(tostring(x))
+function call:_version(print_output)
+    local x = self._c.version
+    if print_output ~= nil then
+        self:_log(tostring(x))
+    end
     return x
 end
 
@@ -170,7 +172,7 @@ end
 -- print debug table (array or hash)
 function call:_debugtable(a)
     print("  .......");
-    local l = call:_count(a)
+    local l = self:_count(a)
     if l == 0 then
         print("    _empty_")
     else

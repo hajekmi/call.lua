@@ -57,7 +57,10 @@ end
 
 
 -- version
-test(tostring(call._c.version), "call:_version")
+test(tostring(call._c.version), "call:_version", "1")
+
+-- help
+call:_help()
 
 -- dir: ./
 test("call.a:welcome=hello world 1", "call.a:welcome", "hello world 1")
