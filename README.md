@@ -51,6 +51,8 @@ end
 function mymodule:undefined(a)
     return 1
 end
+
+return mymodule
 ```
 
 ## Write own sub modules (with unlimited looping in the directories)
@@ -65,6 +67,8 @@ end
 function mysubmodule:undefined(a)
     return 1
 end
+
+return mysubmodule
 ```
 Or you can see to test dir - with unlimited looping in the directories
 
